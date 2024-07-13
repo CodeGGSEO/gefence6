@@ -1,6 +1,7 @@
 let map;
 let currentMarker;
 let stationingLocations = [];
+let zoneCircles = {};
 
 function initMap() {
     map = L.map('map').setView([37.5665, 126.9780], 13);
@@ -18,6 +19,8 @@ function addStationing() {
             localStorage.setItem('stationingLocations', JSON.stringify(stationingLocations));
             updateMap();
             updateZoneSelect();
+            updateStationingButtons();
+            alert(`Stationing ${stationingLocations.length}이 추가되었습니다.`);
         });
     }
 }
@@ -26,6 +29,14 @@ function updateMap() {
     if (currentMarker) {
         map.removeLayer(currentMarker);
     }
+    
+    // Clear existing zone circles
+    for (let key in zoneCircles) {
+        if (zoneCircles.hasOwnProperty(key)) {
+            map.removeLayer(zoneCircles[key]);
+        }
+    }
+    
     if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition((position) => {
             const lat = position.coords.latitude;
@@ -33,11 +44,61 @@ function updateMap() {
             currentMarker = L.marker([lat, lon]).addTo(map);
             map.setView([lat, lon], 15);
             
+            // Add circles for home and work
+            const homeLocation = JSON.parse(localStorage.getItem('homeLocation'));
+            const workLocation = JSON.parse(localStorage.getItem('workLocation'));
+            
+            if (homeLocation) {
+                zoneCircles['home'] = L.circle([homeLocation.lat, homeLocation.lon], {
+                    color: 'blue',
+                    fillColor: '#30f',
+                    fillOpacity: 0.2,
+                    radius: 10
+                }).addTo(map).bindPopup("Home");
+                
+                zoneCircles['home-overlay'] = L.circle([homeLocation.lat, homeLocation.lon], {
+                    color: 'lightblue',
+                    fillColor: '#30f',
+                    fillOpacity: 0.1,
+                    radius: 15
+                }).addTo(map).bindPopup("Home Overlay");
+                
+                zoneCircles['home-nearby'] = L.circle([homeLocation.lat, homeLocation.lon], {
+                    color: 'lightblue',
+                    fillColor: '#30f',
+                    fillOpacity: 0.05,
+                    radius: 3015
+                }).addTo(map).bindPopup("Home Nearby");
+            }
+            
+            if (workLocation) {
+                zoneCircles['work'] = L.circle([workLocation.lat, workLocation.lon], {
+                    color: 'green',
+                    fillColor: '#3f0',
+                    fillOpacity: 0.2,
+                    radius: 30
+                }).addTo(map).bindPopup("Work");
+                
+                zoneCircles['work-overlay'] = L.circle([workLocation.lat, workLocation.lon], {
+                    color: 'lightgreen',
+                    fillColor: '#3f0',
+                    fillOpacity: 0.1,
+                    radius: 35
+                }).addTo(map).bindPopup("Work Overlay");
+                
+                zoneCircles['work-nearby'] = L.circle([workLocation.lat, workLocation.lon], {
+                    color: 'lightgreen',
+                    fillColor: '#3f0',
+                    fillOpacity: 0.05,
+                    radius: 3035
+                }).addTo(map).bindPopup("Work Nearby");
+            }
+            
             stationingLocations.forEach((location, index) => {
-                L.circle([location.lat, location.lon], {
+                zoneCircles[`stationing-${index}`] = L.circle([location.lat, location.lon], {
                     color: 'red',
                     fillColor: '#f03',
-                    fillOpacity: 0.5,
+                    fillOpacity: 0.2,
                     radius: 30
                 }).addTo(map).bindPopup(`Stationing ${index + 1}`);
             });
@@ -59,6 +120,20 @@ function updateZoneSelect() {
         option.value = `stationing-${index}`;
         option.textContent = `Stationing ${index + 1}`;
         zoneSelect.appendChild(option);
+    });
+}
+
+function updateStationingButtons() {
+    const stationingButtonsContainer = document.getElementById('stationingButtons');
+    stationingButtonsContainer.innerHTML = '';
+    stationingLocations.forEach((_, index) => {
+        const button = document.createElement('button');
+        button.textContent = `Stationing ${index + 1}`;
+        button.addEventListener('click', () => {
+            const location = stationingLocations[index];
+            map.setView([location.lat, location.lon], 15);
+        });
+        stationingButtonsContainer.appendChild(button);
     });
 }
 
@@ -107,12 +182,17 @@ function viewActivities() {
     activityList.style.display = 'block';
 }
 
-document.getElementById('addStationing').addEventListener('click', addStationing);
-document.getElementById('addActivity').addEventListener('click', addActivity);
-document.getElementById('submitActivity').addEventListener('click', submitActivity);
-document.getElementById('viewActivities').addEventListener('click', viewActivities);
-
-initMap();
-updateMap();
-updateZoneSelect();
-setInterval(updateMap, 60000); // 1분마다 지도 업데이트
+document.addEventListener('DOMContentLoaded', () => {
+    initMap();
+    stationingLocations = JSON.parse(localStorage.getItem('stationingLocations')) || [];
+    updateMap();
+    updateZoneSelect();
+    updateStationingButtons();
+    
+    document.getElementById('addStationing').addEventListener('click', addStationing);
+    document.getElementById('addActivity').addEventListener('click', addActivity);
+    document.getElementById('submitActivity').addEventListener('click', submitActivity);
+    document.getElementById('viewActivities').addEventListener('click', viewActivities);
+    
+    setInterval(updateMap, 60000); // 1분마다 지도 업데이트
+});
