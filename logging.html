@@ -52,19 +52,39 @@
         #stationingButtons {
             margin-top: 20px;
         }
+        #controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .control-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .control-group button {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>로깅 페이지</h1>
         <div id="controls">
-            <button id="showHome">집</button>
-            <button id="showWork">직장</button>
-            <button id="addStationing">Station 추가</button>
-            <button id="addActivity">활동 추가</button>
-            <button id="viewActivities">활동 내역 보기</button>
-            <button id="clearAllStationings">모든 Stationing 삭제</button>
-            <button id="clearAllActivities">모든 활동 이력 삭제</button>
+            <div class="control-group">
+                <button id="showHome">집</button>
+                <button id="showWork">직장</button>
+            </div>
+            <div class="control-group">
+                <button id="addStationing">Station 추가</button>
+                <button id="addActivity">활동 추가</button>
+            </div>
+            <div class="control-group">
+                <button id="viewActivities">활동 내역 보기</button>
+                <button id="clearAllStationings">모든 Stationing 삭제</button>
+                <button id="clearAllActivities">모든 활동 이력 삭제</button>
+            </div>
         </div>
         <div id="mapContainer">
             <div id="map"></div>
