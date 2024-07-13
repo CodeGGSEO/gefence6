@@ -6,17 +6,50 @@
     <title>로깅 - 위치 기반 영역 설정 앱</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin-top: -10px;
+            margin-left: -10px;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        #crosshair::before, #crosshair::after {
+            content: "";
+            position: absolute;
+            background-color: red;
+        }
+        #crosshair::before {
+            top: 9px;
+            left: 0;
+            width: 20px;
+            height: 2px;
+        }
+        #crosshair::after {
+            top: 0;
+            left: 9px;
+            width: 2px;
+            height: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>로깅 페이지</h1>
-        <div id="currentLocation">현재 위치: 로딩 중...</div>
-        <div id="currentZone">현재 영역: 로딩 중...</div>
-        <div id="map"></div>
         <div id="controls">
+            <button id="showHome">집</button>
+            <button id="showWork">직장</button>
             <button id="addStationing">Station 추가</button>
             <button id="addActivity">활동 추가</button>
             <button id="viewActivities">활동 내역 보기</button>
+        </div>
+        <div id="mapContainer">
+            <div id="map"></div>
+            <div id="crosshair"></div>
         </div>
         <div id="activityForm" style="display: none;">
             <select id="zoneSelect"></select>
