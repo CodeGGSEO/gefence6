@@ -2,11 +2,27 @@ let map;
 let currentMarker;
 let stationingLocations = [];
 let zoneCircles = {};
+let tempCircle;
 
 function initMap() {
     map = L.map('map').setView([37.5665, 126.9780], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    map.on('move', updateTempCircle);
+}
+
+function updateTempCircle() {
+    if (tempCircle) {
+        map.removeLayer(tempCircle);
+    }
+    const center = map.getCenter();
+    tempCircle = L.circle(center, {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.2,
+        radius: 30
     }).addTo(map);
 }
 
@@ -91,13 +107,15 @@ function updateMap() {
     }
     
     stationingLocations.forEach((location, index) => {
-        zoneCircles[`stationing-${index}`] = L.circle([location.lat, location.lon], {
+        zoneCircles[`stationing-${index + 1}`] = L.circle([location.lat, location.lon], {
             color: 'red',
             fillColor: '#f03',
             fillOpacity: 0.2,
             radius: 30
         }).addTo(map).bindPopup(`Stationing ${index + 1}`);
     });
+
+    updateTempCircle();
 }
 
 function updateZoneSelect() {
@@ -111,7 +129,7 @@ function updateZoneSelect() {
     });
     stationingLocations.forEach((_, index) => {
         const option = document.createElement('option');
-        option.value = `stationing-${index}`;
+        option.value = `stationing-${index + 1}`;
         option.textContent = `Stationing ${index + 1}`;
         zoneSelect.appendChild(option);
     });
@@ -153,6 +171,12 @@ function deleteStationing(index) {
     if (confirm(`Stationing ${index + 1}을 삭제하시겠습니까?`)) {
         stationingLocations.splice(index, 1);
         localStorage.setItem('stationingLocations', JSON.stringify(stationingLocations));
+        
+        // Delete activities for this stationing
+        let activities = JSON.parse(localStorage.getItem('activities')) || {};
+        delete activities[`stationing-${index + 1}`];
+        localStorage.setItem('activities', JSON.stringify(activities));
+        
         updateMap();
         updateZoneSelect();
         updateStationingButtons();
@@ -226,6 +250,24 @@ function showWork() {
     }
 }
 
+function clearAllStationings() {
+    if (confirm('모든 Stationing을 삭제하시겠습니까?')) {
+        stationingLocations = [];
+        localStorage.setItem('stationingLocations', JSON.stringify(stationingLocations));
+        updateMap();
+        updateZoneSelect();
+        updateStationingButtons();
+        alert('모든 Stationing이 삭제되었습니다.');
+    }
+}
+
+function clearAllActivities() {
+    if (confirm('모든 활동 이력을 삭제하시겠습니까?')) {
+        localStorage.removeItem('activities');
+        alert('모든 활동 이력이 삭제되었습니다.');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initMap();
     stationingLocations = JSON.parse(localStorage.getItem('stationingLocations')) || [];
@@ -239,6 +281,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('viewActivities').addEventListener('click', viewActivities);
     document.getElementById('showHome').addEventListener('click', showHome);
     document.getElementById('showWork').addEventListener('click', showWork);
+    document.getElementById('clearAllStationings').addEventListener('click', clearAllStationings);
+    document.getElementById('clearAllActivities').addEventListener('click', clearAllActivities);
 });
 
 // End of file
