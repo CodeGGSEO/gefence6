@@ -143,7 +143,8 @@ function updateStationingButtons() {
         buttonGroup.className = 'button-group';
 
         const viewButton = document.createElement('button');
-        viewButton.textContent = `Stationing ${index + 1}`;
+        viewButton.textContent = `S${index + 1}`; // S는 Stationing의 약자
+        viewButton.title = `Stationing ${index + 1}`;
         viewButton.addEventListener('click', () => {
             map.setView([location.lat, location.lon], 15);
         });
@@ -155,7 +156,7 @@ function updateStationingButtons() {
         });
 
         const historyButton = document.createElement('button');
-        historyButton.textContent = '생성이력';
+        historyButton.textContent = '이력';
         historyButton.addEventListener('click', () => {
             showStationingHistory(location);
         });
