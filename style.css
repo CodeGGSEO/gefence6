@@ -18,38 +18,52 @@ body {
     width: 100%;
 }
 
+h1 {
+    text-align: center;
+    color: #333;
+}
+
 button {
-    margin: 10px 0;
-    padding: 10px;
-    width: 100%;
+    cursor: pointer;
     background-color: #4CAF50;
     color: white;
     border: none;
+    padding: 10px 15px;
+    margin: 5px 0;
     border-radius: 5px;
-    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
 }
 
 button:hover {
     background-color: #45a049;
 }
 
-#map {
-    height: 400px;
-    margin-top: 20px;
+#controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
-#activityForm, #activityList {
-    margin-top: 20px;
+.control-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
 }
 
-select, input {
-    margin: 5px 0;
-    padding: 5px;
-    width: 100%;
+.control-group button {
+    flex: 1;
 }
 
 #mapContainer {
     position: relative;
+    height: 400px;
+    margin-bottom: 20px;
+}
+
+#map {
+    height: 100%;
 }
 
 #crosshair {
@@ -84,6 +98,22 @@ select, input {
     height: 20px;
 }
 
+#activityForm {
+    margin-bottom: 20px;
+}
+
+#activityForm select, #activityForm input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#stationingButtons {
+    margin-top: 20px;
+}
+
 .button-group {
     display: flex;
     justify-content: space-between;
@@ -97,23 +127,37 @@ select, input {
     font-size: 0.9em;
 }
 
-#stationingButtons {
+#activityList {
     margin-top: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
 }
 
-#controls {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #4CAF50;
+    text-decoration: none;
 }
 
-.control-group {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
+.back-link:hover {
+    text-decoration: underline;
 }
 
-.control-group button {
-    flex: 1;
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+    
+    button {
+        font-size: 14px;
+    }
+    
+    #mapContainer {
+        height: 300px;
+    }
 }
