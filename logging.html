@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로깅 - 위치 기반 영역 설정 앱</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+</head>
+<body>
+    <div class="container">
+        <h1>로깅 페이지</h1>
+        <div id="currentLocation">현재 위치: 로딩 중...</div>
+        <div id="currentZone">현재 영역: 로딩 중...</div>
+        <div id="map"></div>
+        <div id="controls">
+            <button id="addStationing">Station 추가</button>
+            <button id="addActivity">활동 추가</button>
+            <button id="viewActivities">활동 내역 보기</button>
+        </div>
+        <div id="activityForm" style="display: none;">
+            <select id="zoneSelect"></select>
+            <select id="activityType">
+                <option value="앱 사용">앱 사용</option>
+                <option value="음악 감상">음악 감상</option>
+                <option value="동영상 감상">동영상 감상</option>
+                <option value="사진 촬영">사진 촬영</option>
+                <option value="기타">기타</option>
+            </select>
+            <input type="text" id="activityDetail" placeholder="활동 상세 내용">
+            <button id="submitActivity">활동 저장</button>
+        </div>
+        <div id="activityList" style="display: none;"></div>
+        <a href="index.html">메인 페이지로 돌아가기</a>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="logging.js"></script>
+</body>
+</html>
