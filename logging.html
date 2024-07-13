@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
+        #mapContainer {
+            position: relative;
+        }
         #crosshair {
             position: absolute;
             top: 50%;
@@ -46,6 +49,8 @@
             <button id="addStationing">Station 추가</button>
             <button id="addActivity">활동 추가</button>
             <button id="viewActivities">활동 내역 보기</button>
+            <button id="clearAllStationings">모든 Stationing 삭제</button>
+            <button id="clearAllActivities">모든 활동 이력 삭제</button>
         </div>
         <div id="mapContainer">
             <div id="map"></div>
