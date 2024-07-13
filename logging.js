@@ -15,7 +15,22 @@ function addStationing() {
         navigator.geolocation.getCurrentPosition((position) => {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
-            stationingLocations.push({lat, lon});
+            
+            // Check if the new stationing is not in home or work area
+            const homeLocation = JSON.parse(localStorage.getItem('homeLocation'));
+            const workLocation = JSON.parse(localStorage.getItem('workLocation'));
+            
+            if (isLocationInZone(lat, lon, homeLocation, 15) || isLocationInZone(lat, lon, workLocation, 35)) {
+                alert('집 또는 직장 영역 내에는 Stationing을 추가할 수 없습니다.');
+                return;
+            }
+            
+            const newStationing = {
+                lat,
+                lon,
+                createdAt: new Date().toISOString()
+            };
+            stationingLocations.push(newStationing);
             localStorage.setItem('stationingLocations', JSON.stringify(stationingLocations));
             updateMap();
             updateZoneSelect();
@@ -23,6 +38,12 @@ function addStationing() {
             alert(`Stationing ${stationingLocations.length}이 추가되었습니다.`);
         });
     }
+}
+
+function isLocationInZone(lat, lon, zoneLocation, radius) {
+    if (!zoneLocation) return false;
+    const distance = calculateDistance(lat, lon, zoneLocation.lat, zoneLocation.lon);
+    return distance <= radius;
 }
 
 function updateMap() {
@@ -126,15 +147,47 @@ function updateZoneSelect() {
 function updateStationingButtons() {
     const stationingButtonsContainer = document.getElementById('stationingButtons');
     stationingButtonsContainer.innerHTML = '';
-    stationingLocations.forEach((_, index) => {
-        const button = document.createElement('button');
-        button.textContent = `Stationing ${index + 1}`;
-        button.addEventListener('click', () => {
-            const location = stationingLocations[index];
+    stationingLocations.forEach((location, index) => {
+        const buttonGroup = document.createElement('div');
+        buttonGroup.className = 'button-group';
+
+        const viewButton = document.createElement('button');
+        viewButton.textContent = `Stationing ${index + 1}`;
+        viewButton.addEventListener('click', () => {
             map.setView([location.lat, location.lon], 15);
         });
-        stationingButtonsContainer.appendChild(button);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = '삭제';
+        deleteButton.addEventListener('click', () => {
+            deleteStationing(index);
+        });
+
+        const historyButton = document.createElement('button');
+        historyButton.textContent = '생성이력';
+        historyButton.addEventListener('click', () => {
+            showStationingHistory(location);
+        });
+
+        buttonGroup.appendChild(viewButton);
+        buttonGroup.appendChild(deleteButton);
+        buttonGroup.appendChild(historyButton);
+        stationingButtonsContainer.appendChild(buttonGroup);
     });
+}
+
+function deleteStationing(index) {
+    if (confirm(`Stationing ${index + 1}을 삭제하시겠습니까?`)) {
+        stationingLocations.splice(index, 1);
+        localStorage.setItem('stationingLocations', JSON.stringify(stationingLocations));
+        updateMap();
+        updateZoneSelect();
+        updateStationingButtons();
+    }
+}
+
+function showStationingHistory(location) {
+    alert(`생성 일시: ${new Date(location.createdAt).toLocaleString()}`);
 }
 
 function addActivity() {
@@ -180,6 +233,21 @@ function viewActivities() {
         });
     }
     activityList.style.display = 'block';
+}
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371e3; // metres
+    const φ1 = lat1 * Math.PI/180;
+    const φ2 = lat2 * Math.PI/180;
+    const Δφ = (lat2-lat1) * Math.PI/180;
+    const Δλ = (lon2-lon1) * Math.PI/180;
+
+    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    return R * c;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
