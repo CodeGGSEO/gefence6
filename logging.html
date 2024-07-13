@@ -6,67 +6,6 @@
     <title>로깅 - 위치 기반 영역 설정 앱</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <style>
-        #mapContainer {
-            position: relative;
-        }
-        #crosshair {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            margin-top: -10px;
-            margin-left: -10px;
-            pointer-events: none;
-            z-index: 1000;
-        }
-        #crosshair::before, #crosshair::after {
-            content: "";
-            position: absolute;
-            background-color: red;
-        }
-        #crosshair::before {
-            top: 9px;
-            left: 0;
-            width: 20px;
-            height: 2px;
-        }
-        #crosshair::after {
-            top: 0;
-            left: 9px;
-            width: 2px;
-            height: 20px;
-        }
-        .button-group {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        .button-group button {
-            flex: 1;
-            margin: 0 5px;
-            padding: 5px;
-            font-size: 0.9em;
-        }
-        #stationingButtons {
-            margin-top: 20px;
-        }
-        #controls {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .control-group {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-        .control-group button {
-            flex: 1;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
