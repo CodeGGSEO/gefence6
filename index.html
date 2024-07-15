@@ -1,3 +1,4 @@
+<!-- Start of index.html -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -5,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>위치 기반 영역 설정 앱</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
@@ -15,7 +17,23 @@
         <button id="setHome">현재 위치를 집으로 설정</button>
         <button id="setWork">현재 위치를 직장으로 설정</button>
         <button id="goToLogging">로깅 페이지로 이동</button>
+        <div id="mapContainer">
+            <div id="map"></div>
+        </div>
     </div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+            .then(function(registration) {
+                console.log('Service Worker 등록 성공:', registration.scope);
+            })
+            .catch(function(error) {
+                console.log('Service Worker 등록 실패:', error);
+            });
+        }
+    </script>
 </body>
 </html>
+<!-- End of index.html -->
