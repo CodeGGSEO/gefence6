@@ -1,6 +1,17 @@
+// Start of app.js
 let homeLocation = null;
 let workLocation = null;
 let currentZone = "Placing";
+let map;
+let currentMarker;
+
+function initMap() {
+    map = L.map('map').setView([37.5665, 126.9780], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    updateCurrentLocation();
+}
 
 function setHome() {
     if ('geolocation' in navigator) {
@@ -37,6 +48,11 @@ function updateCurrentLocation() {
             const lon = position.coords.longitude;
             document.getElementById('currentLocation').textContent = `현재 위치: 위도 ${lat.toFixed(6)}, 경도 ${lon.toFixed(6)}`;
             updateCurrentZone(lat, lon);
+            if (currentMarker) {
+                map.removeLayer(currentMarker);
+            }
+            currentMarker = L.marker([lat, lon]).addTo(map);
+            map.setView([lat, lon], 15);
         });
     }
 }
@@ -83,5 +99,6 @@ document.getElementById('goToLogging').addEventListener('click', () => {
     window.location.href = 'logging.html';
 });
 
+document.addEventListener('DOMContentLoaded', initMap);
 setInterval(updateCurrentLocation, 60000); // 1분마다 위치 업데이트
-updateCurrentLocation(); // 초기 위치 설정
+// End of app.js
