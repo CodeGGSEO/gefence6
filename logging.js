@@ -207,7 +207,7 @@ function showStationingHistory(location, index) {
 
     const historyDiv = document.createElement('div');
     historyDiv.innerHTML = historyContent;
-    historyDiv.style.maxHeight = '300px';
+    historyDiv.style.maxHeight = '80vh';  // 화면 높이의 80%
     historyDiv.style.overflowY = 'auto';
 
     const closeButton = document.createElement('button');
@@ -222,9 +222,21 @@ function showStationingHistory(location, index) {
     modal.style.backgroundColor = 'white';
     modal.style.padding = '20px';
     modal.style.border = '1px solid black';
+    modal.style.borderRadius = '10px';
     modal.style.zIndex = '1000';
+    modal.style.width = '80%';  // 화면 너비의 80%
+    modal.style.maxWidth = '600px';  // 최대 너비 설정
+    modal.style.maxHeight = '90vh';  // 화면 높이의 90%
+    modal.style.display = 'flex';
+    modal.style.flexDirection = 'column';
+
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.marginTop = '20px';
+    buttonContainer.style.textAlign = 'right';
+    buttonContainer.appendChild(closeButton);
+
     modal.appendChild(historyDiv);
-    modal.appendChild(closeButton);
+    modal.appendChild(buttonContainer);
 
     document.body.appendChild(modal);
 }
