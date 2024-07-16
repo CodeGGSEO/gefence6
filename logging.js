@@ -305,6 +305,34 @@ function showCurrentLocation() {
     }
 }
 
+function showHome() {
+    const homeLocation = JSON.parse(localStorage.getItem('homeLocation'));
+    if (homeLocation) {
+        map.setView([homeLocation.lat, homeLocation.lon], 15);
+        if (currentMarker) {
+            map.removeLayer(currentMarker);
+        }
+        currentMarker = L.marker([homeLocation.lat, homeLocation.lon]).addTo(map);
+        currentMarker.bindPopup("집").openPopup();
+    } else {
+        alert('집 위치가 설정되지 않았습니다. 메인 페이지에서 먼저 설정해주세요.');
+    }
+}
+
+function showWork() {
+    const workLocation = JSON.parse(localStorage.getItem('workLocation'));
+    if (workLocation) {
+        map.setView([workLocation.lat, workLocation.lon], 15);
+        if (currentMarker) {
+            map.removeLayer(currentMarker);
+        }
+        currentMarker = L.marker([workLocation.lat, workLocation.lon]).addTo(map);
+        currentMarker.bindPopup("직장").openPopup();
+    } else {
+        alert('직장 위치가 설정되지 않았습니다. 메인 페이지에서 먼저 설정해주세요.');
+    }
+}
+
 function checkForAutoStationing(lat, lon) {
     if (currentZone === "Placing") {
         if (!placingTimer) {
@@ -359,6 +387,8 @@ document.addEventListener('DOMContentLoaded', () => {
     updateStationingButtons();
     
     document.getElementById('showCurrentLocation').addEventListener('click', showCurrentLocation);
+    document.getElementById('showHome').addEventListener('click', showHome);
+    document.getElementById('showWork').addEventListener('click', showWork);
     document.getElementById('addStationing').addEventListener('click', addStationing);
     document.getElementById('addActivity').addEventListener('click', addActivity);
     document.getElementById('submitActivity').addEventListener('click', submitActivity);
