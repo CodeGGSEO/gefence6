@@ -386,6 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateZoneSelect();
     updateStationingButtons();
     
+    // 이벤트 리스너 연결
     document.getElementById('showCurrentLocation').addEventListener('click', showCurrentLocation);
     document.getElementById('showHome').addEventListener('click', showHome);
     document.getElementById('showWork').addEventListener('click', showWork);
@@ -396,7 +397,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('clearAllStationings').addEventListener('click', clearAllStationings);
     document.getElementById('clearAllActivities').addEventListener('click', clearAllActivities);
 
-    setInterval(async () => {
+    // Auto Stationing 체크
+    setInterval(() => {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
                 const lat = position.coords.latitude;
